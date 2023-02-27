@@ -34,21 +34,36 @@ PRINT: 'print';
 VAR: 'var';
 NEW: 'new';
 
-// operators
-UNARY_OPERATOR: '-' | '!';
-BINARY_OPERATOR: '+' | '-' | '*' | '%' | '/' | '==' | '<' | '<=' | '>' | '>=' | '==>' | '<==' | '<==>' | '&&' | '||';
+// OPERATORS
+NOT: '!';
+NEG: '-';
+ADD: '+';
+MOD: '%';
+DIV: '/'; 
+MUL: '*';
+EQ: '==';
+LT: '<';
+LEQ: '<=';
+GT: '>';
+GEQ: '>=';
+IMP: '==>';
+RIMP: '<==';
+IFF: '<==>';
+AND: '&&';
+OR: '||';
 
 // LITERAL TYPES
 BOOL_LITERAL: 'false' | 'true';
-INT_LITERAL: '-'? ('0x' [0-9A-Fa-f]+ | '0' | [1-9][0-9]*);
-REAL_LITERAL: '-'? ('0' | [1-9][0-9]*) '.' [0-9]+;
+INT_LITERAL: NEG? ('0x' [0-9A-Fa-f]+ | '0' | [1-9][0-9]*);
+REAL_LITERAL: NEG? ('0' | [1-9][0-9]*) '.' [0-9]+;
+STRING_LITERAL: '"' (STRING_CHAR | '\\' ESCAPED_CHAR)* '"';
 
 // BASICS:
 IDENTIFIER: NON_DIGIT_ID_CHAR ID_CHAR*;
 NON_DIGIT_ID_CHAR: [A-Za-z] | SPECIAL_CHAR;
 SPECIAL_CHAR: '\'' | '_' | '?'; 
 ID_CHAR: [0-9] | NON_DIGIT_ID_CHAR;
-ESCAPED_CHAR: '\'' | '"' | '\\' | '\\0';
+ESCAPED_CHAR: '\'' | '"' | '\\' | '0';
 
 CHAR_CHAR: ~('\'' | '\\');
 STRING_CHAR: ~('"' | '\\');
@@ -58,7 +73,11 @@ int_literal: INT_LITERAL;
 real_literal: REAL_LITERAL;
 char_literal: '\'' (CHAR_CHAR | ESCAPED_CHAR) '\'';
 
-string_token: '"' (STRING_CHAR | ESCAPED_CHAR)* '"';
+string_token: STRING_LITERAL;
+
+// operators
+unary_operator: NOT | NEG;
+binary_operator: ADD | NEG | MUL | MOD | DIV | EQ | LT | LEQ | GT | GEQ | IMP | RIMP | IFF | AND | OR;
 
 identifier: IDENTIFIER;
 
@@ -88,9 +107,9 @@ method_decl: METHOD identifier parameters (RETURNS parameters)? '{' (statement)*
 
 constructor_decl: CONSTRUCTOR parameters '{' (statement)* '}';
 
-expression: (literal | UNARY_OPERATOR expression | function_call | decl_assign_lhs | '(' expression ')') (BINARY_OPERATOR expression)?;
+expression: unary_operator? (literal | function_call | identifier | decl_assign_lhs | '(' expression ')') (binary_operator expression)*;
 
-literal: bool_literal | int_literal | real_literal | char_literal;
+literal: bool_literal | int_literal | real_literal | char_literal | string_token;
 
 call_parameters: '(' expression (',' expression)* ')';
 
