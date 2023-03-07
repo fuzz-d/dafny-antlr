@@ -68,79 +68,79 @@ ESCAPED_CHAR: '\'' | '"' | '\\' | '0';
 CHAR_CHAR: ~('\'' | '\\');
 STRING_CHAR: ~('"' | '\\');
 
-bool_literal: BOOL_LITERAL;
-int_literal: INT_LITERAL;
-real_literal: REAL_LITERAL;
-char_literal: '\'' (CHAR_CHAR | ESCAPED_CHAR) '\'';
+boolLiteral: BOOL_LITERAL;
+intLiteral: INT_LITERAL;
+realLiteral: REAL_LITERAL;
+charLiteral: '\'' (CHAR_CHAR | ESCAPED_CHAR) '\'';
 
-string_token: STRING_LITERAL;
+stringToken: STRING_LITERAL;
 
 // operators
-unary_operator: NOT | NEG;
-binary_operator: ADD | NEG | MUL | MOD | DIV | EQ | LT | LEQ | GT | GEQ | IMP | RIMP | IFF | AND | OR;
+unaryOperator: NOT | NEG;
+binaryOperator: ADD | NEG | MUL | MOD | DIV | EQ | LT | LEQ | GT | GEQ | IMP | RIMP | IFF | AND | OR;
 
 identifier: IDENTIFIER;
 
-top_decl: class_decl | trait_decl | top_decl_member;
+topDecl: classDecl | traitDecl | topDeclMember;
 
-generic_instantiation: '<' type (',' type)* '>';
+genericInstantiation: '<' type (',' type)* '>';
 
-type: INT | CHAR | REAL | BOOL | STRING | array_type;
+type: INT | CHAR | REAL | BOOL | STRING | arrayType;
 
-array_type: ARRAY generic_instantiation;
+arrayType: ARRAY genericInstantiation;
 
-class_decl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (class_member_decl)* '}';
+classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
-trait_decl: TRAIT identifier (EXTENDS identifier (',' identifier)*)? '{' (class_member_decl)* '}';
+traitDecl: TRAIT identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
-class_member_decl: field_decl | function_decl | method_decl | constructor_decl;
+classMemberDecl: fieldDecl | functionDecl | methodDecl | constructorDecl;
 
-field_decl: VAR identifier_type ';';
+fieldDecl: VAR identifierType ';';
 
-identifier_type: identifier ':' type;
+identifierType: identifier ':' type;
 
-parameters: '(' (identifier_type (',' identifier_type)*)? ')';
+parameters: '(' (identifierType (',' identifierType)*)? ')';
 
-function_decl: FUNCTION (METHOD)? identifier parameters ':' type '{' expression '}';
+functionDecl: FUNCTION (METHOD)? identifier parameters ':' type '{' expression '}';
 
-method_decl: METHOD identifier parameters (RETURNS parameters)? '{' (statement)* '}'; 
+methodDecl: METHOD identifier parameters (RETURNS parameters)? '{' (statement)* '}';
 
-constructor_decl: CONSTRUCTOR parameters '{' (statement)* '}';
+constructorDecl: CONSTRUCTOR parameters '{' (statement)* '}';
 
-expression: unary_operator? (literal | function_call | identifier | decl_assign_lhs | '(' expression ')') (binary_operator expression)*;
+expression: unaryOperator? (literal | functionCall | identifier | declAssignLhs | '(' expression ')') (binaryOperator expression)*;
 
-literal: bool_literal | int_literal | real_literal | char_literal | string_token;
+literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
-call_parameters: '(' expression (',' expression)* ')';
+callParameters: '(' expression (',' expression)* ')';
 
-function_call: identifier call_parameters;
+functionCall: identifier callParameters;
 
-statement: (break_statement | continue_statement | declaration | assignment | print | if_statement | while_statement);
+statement: (breakStatement | continueStatement | declaration | assignment | print | ifStatement | whileStatement);
 
-break_statement: BREAK ';';
-continue_statement: CONTINUE ';';
+breakStatement: BREAK ';';
+continueStatement: CONTINUE ';';
 
-decl_assign_lhs: identifier | array_index | object_identifier;
-decl_assign_rhs: expression | array_constructor | function_call;
+declAssignLhs: identifier | arrayIndex | objectIdentifier;
+declAssignRhs: expression | arrayConstructor | functionCall;
 
-declaration_lhs: VAR decl_assign_lhs;
-declaration: declaration_lhs ':=' decl_assign_rhs ';';
+declarationLhs: VAR declAssignLhs;
+declaration: declarationLhs ':=' declAssignRhs ';';
 
-assignment_lhs: decl_assign_lhs;
-assignment: assignment_lhs ':=' decl_assign_rhs ';';
+assignmentLhs: declAssignLhs;
+assignment: assignmentLhs ':=' declAssignRhs ';';
 
 print: PRINT expression ';';
 
-if_statement: IF '(' expression ')' '{' statement* '}' (ELSE '{' statement* '}')?;
+ifStatement: IF '(' expression ')' '{' statement* '}' (ELSE '{' statement* '}')?;
 
-while_statement: WHILE '(' expression ')' '{' statement* '}';
+whileStatement: WHILE '(' expression ')' '{' statement* '}';
 
-array_constructor: NEW type ('[' int_literal (',' int_literal)* ']')+;
+arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
 
-array_index: identifier  ('[' expression (',' expression)* ']')+;
+arrayIndex: identifier  ('[' expression (',' expression)* ']')+;
 
-object_identifier: (IDENTIFIER '.')? identifier;
+objectIdentifier: (IDENTIFIER '.')? identifier;
 
-top_decl_member: function_decl | method_decl;
+topDeclMember: functionDecl | methodDecl;
 
-program: top_decl*;
+program: topDecl*;
