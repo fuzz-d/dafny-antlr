@@ -39,7 +39,7 @@ NOT: '!';
 NEG: '-';
 ADD: '+';
 MOD: '%';
-DIV: '/'; 
+DIV: '/';
 MUL: '*';
 EQ: '==';
 LT: '<';
@@ -61,7 +61,7 @@ STRING_LITERAL: '"' (STRING_CHAR | '\\' ESCAPED_CHAR)* '"';
 // BASICS:
 IDENTIFIER: NON_DIGIT_ID_CHAR ID_CHAR*;
 NON_DIGIT_ID_CHAR: [A-Za-z] | SPECIAL_CHAR;
-SPECIAL_CHAR: '\'' | '_' | '?'; 
+SPECIAL_CHAR: '\'' | '_' | '?';
 ID_CHAR: [0-9] | NON_DIGIT_ID_CHAR;
 ESCAPED_CHAR: '\'' | '"' | '\\' | '0';
 
@@ -91,9 +91,15 @@ arrayType: ARRAY genericInstantiation;
 
 classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
-traitDecl: TRAIT identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
-
 classMemberDecl: fieldDecl | functionDecl | methodDecl | constructorDecl;
+
+traitDecl: TRAIT identifier (EXTENDS identifier (',' identifier)*)? '{' (traitMemberDecl)* '}';
+
+traitMemberDecl: fieldDecl | functionSignatureDecl | methodSignatureDecl;
+
+functionSignatureDecl: FUNCTION (METHOD)? identifier parameters ':' type;
+
+methodSignatureDecl: METHOD identifier parameters (RETURNS parameters)?;
 
 fieldDecl: VAR identifierType ';';
 
@@ -101,9 +107,9 @@ identifierType: identifier ':' type;
 
 parameters: '(' (identifierType (',' identifierType)*)? ')';
 
-functionDecl: FUNCTION (METHOD)? identifier parameters ':' type '{' expression '}';
+functionDecl: functionSignatureDecl '{' expression '}';
 
-methodDecl: METHOD identifier parameters (RETURNS parameters)? '{' (statement)* '}';
+methodDecl: methodSignatureDecl '{' (statement)* '}';
 
 constructorDecl: CONSTRUCTOR parameters '{' (statement)* '}';
 
