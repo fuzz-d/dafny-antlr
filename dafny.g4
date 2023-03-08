@@ -145,7 +145,7 @@ arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
 
 arrayIndex: identifier  ('[' expression (',' expression)* ']')+;
 
-objectIdentifier: (IDENTIFIER '.')? identifier;
+objectIdentifier: (identifier '.')? identifier;
 
 topDeclMember: functionDecl | methodDecl;
 
