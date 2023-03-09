@@ -109,11 +109,17 @@ parameters: '(' (identifierType (',' identifierType)*)? ')';
 
 functionDecl: functionSignatureDecl '{' expression '}';
 
-methodDecl: methodSignatureDecl '{' (statement)* '}';
+methodDecl: methodSignatureDecl '{' sequence '}';
 
-constructorDecl: CONSTRUCTOR parameters '{' (statement)* '}';
+constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
-expression: unaryOperator? (literal | functionCall | identifier | declAssignLhs | '(' expression ')') (binaryOperator expression)*;
+expression: expressionLhs binaryExpression?;
+
+expressionLhs: (unaryExpression | literal | functionCall | declAssignLhs | '(' expression ')');
+
+unaryExpression: unaryOperator expression;
+
+binaryExpression: binaryOperator expression;
 
 literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
@@ -127,7 +133,7 @@ breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
 declAssignLhs: identifier | arrayIndex | objectIdentifier;
-declAssignRhs: expression | arrayConstructor | functionCall;
+declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs;
 declaration: declarationLhs ':=' declAssignRhs ';';
@@ -137,9 +143,11 @@ assignment: assignmentLhs ':=' declAssignRhs ';';
 
 print: PRINT expression ';';
 
-ifStatement: IF '(' expression ')' '{' statement* '}' (ELSE '{' statement* '}')?;
+sequence: statement*;
 
-whileStatement: WHILE '(' expression ')' '{' statement* '}';
+ifStatement: IF '(' expression ')' '{' sequence '}' (ELSE '{' sequence '}')?;
+
+whileStatement: WHILE '(' expression ')' '{' sequence '}';
 
 arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
 
