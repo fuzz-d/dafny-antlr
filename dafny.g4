@@ -42,6 +42,7 @@ MOD: '%';
 DIV: '/';
 MUL: '*';
 EQ: '==';
+NEQ: '!=';
 LT: '<';
 LEQ: '<=';
 GT: '>';
@@ -77,7 +78,6 @@ stringToken: STRING_LITERAL;
 
 // operators
 unaryOperator: NOT | NEG;
-binaryOperator: ADD | NEG | MUL | MOD | DIV | EQ | LT | LEQ | GT | GEQ | IMP | RIMP | IFF | AND | OR;
 
 identifier: IDENTIFIER;
 
@@ -113,13 +113,18 @@ methodDecl: methodSignatureDecl '{' sequence '}';
 
 constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
-expression: expressionLhs binaryExpression?;
-
-expressionLhs: (unaryExpression | literal | functionCall | declAssignLhs | '(' expression ')');
-
-unaryExpression: unaryOperator expression;
-
-binaryExpression: binaryOperator expression;
+expression: literal
+    | functionCall
+    | declAssignLhs
+    | unaryOperator expression
+    | '(' expression ')'
+    | expression (MUL | DIV | MOD) expression
+    | expression (ADD | NEG) expression
+    | expression (GT | GEQ | LT | LEQ | EQ | NEQ) expression
+    | expression (AND | OR) expression
+    | expression (IMP | RIMP) expression
+    | expression IFF expression
+;
 
 literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
