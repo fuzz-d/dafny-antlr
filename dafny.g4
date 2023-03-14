@@ -20,6 +20,7 @@ METHOD: 'method';
 FUNCTION: 'function';
 RETURNS: 'returns';
 CONSTRUCTOR: 'constructor';
+LENGTH: 'Length';
 
 // CONTROL FLOW
 IF: 'if';
@@ -101,7 +102,7 @@ functionSignatureDecl: FUNCTION (METHOD)? identifier parameters ':' type;
 
 methodSignatureDecl: METHOD identifier parameters (RETURNS parameters)?;
 
-fieldDecl: VAR identifierType ';';
+fieldDecl: VAR identifierType;
 
 identifierType: identifier ':' type;
 
@@ -113,12 +114,13 @@ methodDecl: methodSignatureDecl '{' sequence '}';
 
 constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
-expression: literal
-    | declAssignLhs
-    | unaryOperator expression
+expression: unaryOperator expression
     | classInstantiation
     | functionCall
     | ternaryExpression
+    | arrayLength
+    | literal
+    | declAssignLhs
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG) expression
@@ -132,13 +134,15 @@ literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
 callParameters: '(' (expression (',' expression)*)* ')';
 
-functionCall: identifier callParameters;
+functionCall: declAssignLhs callParameters;
 
 classInstantiation: NEW identifier callParameters;
 
 ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
-statement: (breakStatement | continueStatement | declaration | assignment | print | ifStatement | whileStatement);
+arrayLength: identifier '.' LENGTH;
+
+statement: (breakStatement | continueStatement | voidMethodCall | declaration | assignment | print | ifStatement | whileStatement);
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
@@ -146,13 +150,15 @@ continueStatement: CONTINUE ';';
 declAssignLhs: identifier | arrayIndex | objectIdentifier;
 declAssignRhs: expression | arrayConstructor;
 
-declarationLhs: VAR declAssignLhs;
+declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
 declaration: declarationLhs ':=' declAssignRhs ';';
 
 assignmentLhs: declAssignLhs;
 assignment: assignmentLhs ':=' declAssignRhs ';';
 
 print: PRINT expression ';';
+
+voidMethodCall: declAssignLhs callParameters ';';
 
 sequence: statement*;
 
