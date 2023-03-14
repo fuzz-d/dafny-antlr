@@ -118,6 +118,7 @@ expression: literal
     | unaryOperator expression
     | classInstantiation
     | functionCall
+    | ternaryExpression
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG) expression
@@ -134,6 +135,8 @@ callParameters: '(' (expression (',' expression)*)* ')';
 functionCall: identifier callParameters;
 
 classInstantiation: NEW identifier callParameters;
+
+ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
 statement: (breakStatement | continueStatement | declaration | assignment | print | ifStatement | whileStatement);
 
