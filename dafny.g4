@@ -114,9 +114,10 @@ methodDecl: methodSignatureDecl '{' sequence '}';
 constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
 expression: literal
-    | functionCall
     | declAssignLhs
     | unaryOperator expression
+    | classInstantiation
+    | functionCall
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG) expression
@@ -128,9 +129,11 @@ expression: literal
 
 literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
-callParameters: '(' expression (',' expression)* ')';
+callParameters: '(' (expression (',' expression)*)* ')';
 
 functionCall: identifier callParameters;
+
+classInstantiation: NEW identifier callParameters;
 
 statement: (breakStatement | continueStatement | declaration | assignment | print | ifStatement | whileStatement);
 
