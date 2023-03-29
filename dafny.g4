@@ -140,14 +140,14 @@ classInstantiation: NEW identifier callParameters;
 
 ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
-arrayLength: identifier '.' LENGTH;
+arrayLength: declAssignLhs '.' LENGTH;
 
 statement: (breakStatement | continueStatement | voidMethodCall | declaration | assignment | print | ifStatement | whileStatement);
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
-declAssignLhs: identifier | arrayIndex ('.' declAssignLhs)?;
+declAssignLhs: (identifier | arrayIndex) ('.' declAssignLhs)?;
 declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
