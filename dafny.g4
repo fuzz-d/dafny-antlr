@@ -147,7 +147,7 @@ statement: (breakStatement | continueStatement | voidMethodCall | declaration | 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
-declAssignLhs: identifier | arrayIndex | objectIdentifier;
+declAssignLhs: identifier | arrayIndex ('.' declAssignLhs)?;
 declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
@@ -169,8 +169,6 @@ whileStatement: WHILE '(' expression ')' '{' sequence '}';
 arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
 
 arrayIndex: identifier  ('[' expression (',' expression)* ']')+;
-
-objectIdentifier: (identifier '.')? identifier;
 
 topDeclMember: functionDecl | methodDecl;
 
