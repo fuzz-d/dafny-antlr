@@ -127,6 +127,7 @@ expression: unaryOperator expression
     | declAssignLhs
     | setDisplay
     | mapConstructor
+    | mapIndexAssign
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
@@ -161,7 +162,7 @@ statement: (breakStatement | continueStatement | voidMethodCall | declaration | 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
-declAssignLhs: (identifier | identIndex | mapIndexAssign) ('.' declAssignLhs)?;
+declAssignLhs: (identifier | identIndex) ('.' declAssignLhs)?;
 declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
