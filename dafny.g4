@@ -53,6 +53,9 @@ RIMP: '<==';
 IFF: '<==>';
 AND: '&&';
 OR: '||';
+IN: 'in';
+NOT_IN: '!in';
+DISJ: '!!';
 
 // LITERAL TYPES
 BOOL_LITERAL: 'false' | 'true';
@@ -123,8 +126,8 @@ expression: unaryOperator expression
     | declAssignLhs
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
-    | expression (ADD | NEG) expression
-    | expression (GT | GEQ | LT | LEQ | EQ | NEQ) expression
+    | expression (ADD | NEG | IN | NOT_IN) expression
+    | expression (GT | GEQ | LT | LEQ | EQ | NEQ | DISJ) expression
     | expression (AND | OR) expression
     | expression (IMP | RIMP) expression
     | expression IFF expression
