@@ -11,6 +11,7 @@ REAL: 'real';
 CHAR: 'char';
 STRING: 'string';
 ARRAY: 'array';
+MAP: 'map';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
@@ -124,6 +125,8 @@ expression: unaryOperator expression
     | arrayLength
     | literal
     | declAssignLhs
+    | setDisplay
+    | mapConstructor
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
@@ -145,12 +148,20 @@ ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
 arrayLength: declAssignLhs '.' LENGTH;
 
+setDisplay: '{' expression* '}';
+
+mapConstructor: MAP '[' (mapElem (',' mapElem)*)? ']';
+
+mapIndexAssign: identifier '[' mapElem ']';
+
+mapElem: expression ':=' expression;
+
 statement: (breakStatement | continueStatement | voidMethodCall | declaration | assignment | print | ifStatement | whileStatement);
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
-declAssignLhs: (identifier | arrayIndex) ('.' declAssignLhs)?;
+declAssignLhs: (identifier | identIndex | mapIndexAssign) ('.' declAssignLhs)?;
 declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
@@ -171,7 +182,7 @@ whileStatement: WHILE '(' expression ')' '{' sequence '}';
 
 arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
 
-arrayIndex: identifier  ('[' expression (',' expression)* ']')+;
+identIndex: identifier  ('[' expression (',' expression)* ']')+;
 
 topDeclMember: functionDecl | methodDecl;
 
