@@ -12,6 +12,7 @@ CHAR: 'char';
 STRING: 'string';
 ARRAY: 'array';
 MAP: 'map';
+SET: 'set';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
@@ -56,20 +57,19 @@ AND: '&&';
 OR: '||';
 IN: 'in';
 NOT_IN: '!in';
-DISJ: '!!';
 
 // LITERAL TYPES
 BOOL_LITERAL: 'false' | 'true';
 INT_LITERAL: NEG? ('0x' [0-9A-Fa-f]+ | '0' | [1-9][0-9]*);
 REAL_LITERAL: NEG? ('0' | [1-9][0-9]*) '.' [0-9]+;
-STRING_LITERAL: '"' (STRING_CHAR | '\\' ESCAPED_CHAR)* '"';
+STRING_LITERAL: '"' (STRING_CHAR | ESCAPED_CHAR)* '"';
 
 // BASICS:
 IDENTIFIER: NON_DIGIT_ID_CHAR ID_CHAR*;
 NON_DIGIT_ID_CHAR: [A-Za-z] | SPECIAL_CHAR;
 SPECIAL_CHAR: '\'' | '_' | '?';
 ID_CHAR: [0-9] | NON_DIGIT_ID_CHAR;
-ESCAPED_CHAR: '\'' | '"' | '\\' | '0';
+ESCAPED_CHAR: '\'' | '\\' | '0' | '\n';
 
 CHAR_CHAR: ~('\'' | '\\');
 STRING_CHAR: ~('"' | '\\');
@@ -90,9 +90,13 @@ topDecl: classDecl | traitDecl | topDeclMember;
 
 genericInstantiation: '<' type (',' type)* '>';
 
-type: INT | CHAR | REAL | BOOL | STRING | arrayType;
+type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | identifier;
 
 arrayType: ARRAY genericInstantiation;
+
+mapType: MAP genericInstantiation;
+
+setType: SET genericInstantiation;
 
 classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
@@ -118,6 +122,8 @@ methodDecl: methodSignatureDecl '{' sequence '}';
 
 constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
+disj: NOT NOT;
+
 expression: unaryOperator expression
     | classInstantiation
     | functionCall
@@ -131,9 +137,10 @@ expression: unaryOperator expression
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
-    | expression (GT | GEQ | LT | LEQ | EQ | NEQ | DISJ) expression
+    | expression (GT | GEQ | LT | LEQ | EQ | NEQ) expression
     | expression (AND | OR) expression
     | expression (IMP | RIMP) expression
+    | expression disj expression
     | expression IFF expression
 ;
 
@@ -149,11 +156,11 @@ ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
 arrayLength: declAssignLhs '.' LENGTH;
 
-setDisplay: '{' expression* '}';
+setDisplay: '{' (expression (',' expression)*)? '}';
 
 mapConstructor: MAP '[' (mapElem (',' mapElem)*)? ']';
 
-mapIndexAssign: identifier '[' mapElem ']';
+mapIndexAssign: declAssignLhs '[' mapElem ']';
 
 mapElem: expression ':=' expression;
 
@@ -162,16 +169,17 @@ statement: (breakStatement | continueStatement | voidMethodCall | declaration | 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
 
-declAssignLhs: (identifier | identIndex) ('.' declAssignLhs)?;
+declIdentifier: identifier ('[' expression (',' expression)* ']')*;
+declAssignLhs: declIdentifier ('.' declAssignLhs)?;
 declAssignRhs: expression | arrayConstructor;
 
 declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
-declaration: declarationLhs ':=' declAssignRhs ';';
+declaration: declarationLhs (':' type)? ':=' declAssignRhs ';';
 
 assignmentLhs: declAssignLhs;
 assignment: assignmentLhs ':=' declAssignRhs ';';
 
-print: PRINT expression ';';
+print: PRINT expression (',' expression)* ';';
 
 voidMethodCall: declAssignLhs callParameters ';';
 
@@ -182,8 +190,6 @@ ifStatement: IF '(' expression ')' '{' sequence '}' (ELSE '{' sequence '}')?;
 whileStatement: WHILE '(' expression ')' '{' sequence '}';
 
 arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
-
-identIndex: identifier  ('[' expression (',' expression)* ']')+;
 
 topDeclMember: functionDecl | methodDecl;
 
