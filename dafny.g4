@@ -13,6 +13,7 @@ STRING: 'string';
 ARRAY: 'array';
 MAP: 'map';
 SET: 'set';
+MULTISET: 'multiset';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
@@ -90,13 +91,15 @@ topDecl: classDecl | traitDecl | topDeclMember;
 
 genericInstantiation: '<' type (',' type)* '>';
 
-type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | identifier;
+type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | multisetType | identifier;
 
 arrayType: ARRAY genericInstantiation;
 
 mapType: MAP genericInstantiation;
 
 setType: SET genericInstantiation;
+
+multisetType: MULTISET genericInstantiation;
 
 classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
@@ -159,7 +162,7 @@ ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
 arrayLength: declAssignLhs '.' LENGTH;
 
-setDisplay: '{' (expression (',' expression)*)? '}';
+setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
 
 mapConstructor: MAP '[' (mapElem (',' mapElem)*)? ']';
 
