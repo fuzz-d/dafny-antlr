@@ -125,6 +125,7 @@ constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 disj: NOT NOT;
 
 expression: unaryOperator expression
+    | modulus
     | classInstantiation
     | functionCall
     | ternaryExpression
@@ -143,6 +144,8 @@ expression: unaryOperator expression
     | expression disj expression
     | expression IFF expression
 ;
+
+modulus: '|' expression '|';
 
 literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
