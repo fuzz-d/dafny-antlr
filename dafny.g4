@@ -137,7 +137,7 @@ expression: unaryOperator expression
     | declAssignLhs
     | setDisplay
     | mapConstructor
-    | mapIndexAssign
+    | indexAssign
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
@@ -164,11 +164,11 @@ arrayLength: declAssignLhs '.' LENGTH;
 
 setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
 
-mapConstructor: MAP '[' (mapElem (',' mapElem)*)? ']';
+mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
 
-mapIndexAssign: declAssignLhs '[' mapElem ']';
+indexAssign: declAssignLhs '[' indexElem ']';
 
-mapElem: expression ':=' expression;
+indexElem: expression ':=' expression;
 
 statement: (breakStatement | continueStatement | voidMethodCall | declaration | assignment | print | ifStatement | whileStatement);
 
