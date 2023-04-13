@@ -14,6 +14,7 @@ ARRAY: 'array';
 MAP: 'map';
 SET: 'set';
 MULTISET: 'multiset';
+SEQUENCE: 'sequence';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
@@ -91,7 +92,7 @@ topDecl: classDecl | traitDecl | topDeclMember;
 
 genericInstantiation: '<' type (',' type)* '>';
 
-type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | multisetType | identifier;
+type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | multisetType | sequenceType | identifier;
 
 arrayType: ARRAY genericInstantiation;
 
@@ -100,6 +101,8 @@ mapType: MAP genericInstantiation;
 setType: SET genericInstantiation;
 
 multisetType: MULTISET genericInstantiation;
+
+sequenceType: SEQUENCE genericInstantiation;
 
 classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
 
@@ -136,6 +139,7 @@ expression: unaryOperator expression
     | literal
     | declAssignLhs
     | setDisplay
+    | sequenceDisplay
     | mapConstructor
     | indexAssign
     | '(' expression ')'
@@ -163,6 +167,8 @@ ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 arrayLength: declAssignLhs '.' LENGTH;
 
 setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
+
+sequenceDisplay: '[' (expression (',' expression)*)? ']';
 
 mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
 
