@@ -132,6 +132,7 @@ disj: NOT NOT;
 
 expression: unaryOperator expression
     | modulus
+    | multisetConversion
     | classInstantiation
     | functionCall
     | ternaryExpression
@@ -153,6 +154,8 @@ expression: unaryOperator expression
 ;
 
 modulus: '|' expression '|';
+
+multisetConversion: MULTISET '(' expression ')';
 
 literal: boolLiteral | intLiteral | realLiteral | charLiteral | stringToken;
 
