@@ -14,7 +14,7 @@ ARRAY: 'array';
 MAP: 'map';
 SET: 'set';
 MULTISET: 'multiset';
-SEQUENCE: 'sequence';
+SEQUENCE: 'seq';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
