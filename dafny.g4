@@ -138,10 +138,11 @@ expression: unaryOperator expression
     | ternaryExpression
     | arrayLength
     | literal
-    | declAssignLhs
     | setDisplay
     | sequenceDisplay
     | mapConstructor
+    | identifier
+    | expression index
     | indexAssign
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
@@ -168,6 +169,8 @@ classInstantiation: NEW identifier callParameters;
 ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
 arrayLength: declAssignLhs '.' LENGTH;
+
+index: '[' expression (',' expression)* ']';
 
 setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
 
