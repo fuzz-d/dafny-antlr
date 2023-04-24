@@ -65,6 +65,7 @@ BOOL_LITERAL: 'false' | 'true';
 INT_LITERAL: NEG? ('0x' [0-9A-Fa-f]+ | '0' | [1-9][0-9]*);
 REAL_LITERAL: NEG? ('0' | [1-9][0-9]*) '.' [0-9]+;
 STRING_LITERAL: '"' (STRING_CHAR | ESCAPED_CHAR)* '"';
+CHAR_LITERAL: '\'' (CHAR_CHAR) '\'';
 
 // BASICS:
 IDENTIFIER: NON_DIGIT_ID_CHAR ID_CHAR*;
@@ -79,7 +80,7 @@ STRING_CHAR: ~('"' | '\\');
 boolLiteral: BOOL_LITERAL;
 intLiteral: INT_LITERAL;
 realLiteral: REAL_LITERAL;
-charLiteral: '\'' (CHAR_CHAR | ESCAPED_CHAR) '\'';
+charLiteral: CHAR_LITERAL;
 
 stringToken: STRING_LITERAL;
 
@@ -141,7 +142,7 @@ expression: unaryOperator expression
     | setDisplay
     | sequenceDisplay
     | mapConstructor
-    | identifier
+    | identifiers
     | expression index
     | indexAssign
     | '(' expression ')'
@@ -153,6 +154,8 @@ expression: unaryOperator expression
     | expression disj expression
     | expression IFF expression
 ;
+
+identifiers: identifier ('.' identifiers)?;
 
 modulus: '|' expression '|';
 
