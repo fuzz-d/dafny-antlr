@@ -15,6 +15,7 @@ MAP: 'map';
 SET: 'set';
 MULTISET: 'multiset';
 SEQUENCE: 'seq';
+DATATYPE: 'datatype';
 
 // METHODS AND CLASSES
 TRAIT: 'trait';
@@ -59,6 +60,7 @@ AND: '&&';
 OR: '||';
 IN: 'in';
 NOT_IN: '!in';
+DOT: '.';
 
 // LITERAL TYPES
 BOOL_LITERAL: 'false' | 'true';
@@ -68,6 +70,7 @@ STRING_LITERAL: '"' (STRING_CHAR | ESCAPED_CHAR)* '"';
 CHAR_LITERAL: '\'' (CHAR_CHAR) '\'';
 
 // BASICS:
+UPPER_IDENTIFIER: [A-Z] ID_CHAR*;
 IDENTIFIER: NON_DIGIT_ID_CHAR ID_CHAR*;
 NON_DIGIT_ID_CHAR: [A-Za-z] | SPECIAL_CHAR;
 SPECIAL_CHAR: '\'' | '_' | '?';
@@ -87,13 +90,15 @@ stringToken: STRING_LITERAL;
 // operators
 unaryOperator: NOT | NEG;
 
+upperIdentifier: UPPER_IDENTIFIER;
+
 identifier: IDENTIFIER;
 
-topDecl: classDecl | traitDecl | topDeclMember;
+topDecl: datatypeDecl | classDecl | traitDecl | topDeclMember;
 
 genericInstantiation: '<' type (',' type)* '>';
 
-type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | multisetType | sequenceType | identifier;
+type: INT | CHAR | REAL | BOOL | STRING | arrayType | mapType | setType | multisetType | sequenceType | upperIdentifier;
 
 arrayType: ARRAY genericInstantiation;
 
@@ -105,17 +110,21 @@ multisetType: MULTISET genericInstantiation;
 
 sequenceType: SEQUENCE genericInstantiation;
 
-classDecl: CLASS identifier (EXTENDS identifier (',' identifier)*)? '{' (classMemberDecl)* '}';
+datatypeDecl: DATATYPE upperIdentifier '=' datatypeConstructor ('|' datatypeConstructor)*;
+
+datatypeConstructor: upperIdentifier parameters?;
+
+classDecl: CLASS upperIdentifier (EXTENDS upperIdentifier (',' upperIdentifier)*)? '{' (classMemberDecl)* '}';
 
 classMemberDecl: fieldDecl | functionDecl | methodDecl | constructorDecl;
 
-traitDecl: TRAIT identifier (EXTENDS identifier (',' identifier)*)? '{' (traitMemberDecl)* '}';
+traitDecl: TRAIT upperIdentifier (EXTENDS upperIdentifier (',' upperIdentifier)*)? '{' (traitMemberDecl)* '}';
 
 traitMemberDecl: fieldDecl | functionSignatureDecl | methodSignatureDecl;
 
-functionSignatureDecl: FUNCTION (METHOD)? identifier parameters ':' type;
+functionSignatureDecl: FUNCTION (METHOD)? (identifier | upperIdentifier) parameters ':' type;
 
-methodSignatureDecl: METHOD identifier parameters (RETURNS parameters)?;
+methodSignatureDecl: METHOD (identifier | upperIdentifier) parameters (RETURNS parameters)?;
 
 fieldDecl: VAR identifierType;
 
@@ -135,6 +144,7 @@ expression: unaryOperator expression
     | modulus
     | multisetConversion
     | classInstantiation
+    | datatypeInstantiation
     | functionCall
     | ternaryExpression
     | arrayLength
@@ -142,9 +152,11 @@ expression: unaryOperator expression
     | setDisplay
     | sequenceDisplay
     | mapConstructor
-    | identifiers
+    | identifier
     | expression index
-    | indexAssign
+    | expression '[' indexElem ']'
+    | expression DOT '(' datatypeFieldUpdate+ ')'
+    | expression DOT expression
     | '(' expression ')'
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
@@ -155,7 +167,7 @@ expression: unaryOperator expression
     | expression IFF expression
 ;
 
-identifiers: identifier ('.' identifiers)?;
+datatypeFieldUpdate: identifier ':=' expression;
 
 modulus: '|' expression '|';
 
@@ -167,7 +179,9 @@ callParameters: '(' (expression (',' expression)*)* ')';
 
 functionCall: declAssignLhs callParameters;
 
-classInstantiation: NEW identifier callParameters;
+classInstantiation: NEW upperIdentifier callParameters;
+
+datatypeInstantiation: upperIdentifier callParameters;
 
 ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
@@ -180,8 +194,6 @@ setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
 sequenceDisplay: '[' (expression (',' expression)*)? ']';
 
 mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
-
-indexAssign: declAssignLhs '[' indexElem ']';
 
 indexElem: expression ':=' expression;
 
