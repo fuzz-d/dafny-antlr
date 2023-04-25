@@ -35,6 +35,8 @@ BREAK: 'break';
 CONTINUE: 'continue';
 WHILE: 'while';
 PRINT: 'print';
+MATCH: 'match';
+CASE: 'case';
 
 // OTHER KEYWORDS
 VAR: 'var';
@@ -140,24 +142,25 @@ constructorDecl: CONSTRUCTOR parameters '{' sequence '}';
 
 disj: NOT NOT;
 
-expression: unaryOperator expression
-    | modulus
+expression: modulus
     | multisetConversion
     | classInstantiation
     | datatypeInstantiation
     | functionCall
     | ternaryExpression
+    | matchExpression
     | arrayLength
     | literal
     | setDisplay
     | sequenceDisplay
     | mapConstructor
     | identifier
-    | expression index
     | expression '[' indexElem ']'
     | expression DOT '(' datatypeFieldUpdate+ ')'
     | expression DOT expression
     | '(' expression ')'
+    | expression index
+    | unaryOperator expression
     | expression (MUL | DIV | MOD) expression
     | expression (ADD | NEG | IN | NOT_IN) expression
     | expression (GT | GEQ | LT | LEQ | EQ | NEQ) expression
@@ -185,6 +188,9 @@ datatypeInstantiation: upperIdentifier callParameters;
 
 ternaryExpression: IF '(' expression ')' THEN expression ELSE expression;
 
+matchExpression: MATCH expression '{' caseExpression+ '}';
+caseExpression: CASE expression '=>' expression;
+
 arrayLength: declAssignLhs '.' LENGTH;
 
 index: '[' expression (',' expression)* ']';
@@ -197,7 +203,15 @@ mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
 
 indexElem: expression ':=' expression;
 
-statement: (breakStatement | continueStatement | voidMethodCall | declaration | assignment | print | ifStatement | whileStatement);
+statement: breakStatement
+    | continueStatement
+    | voidMethodCall
+    | declaration
+    | assignment
+    | print
+    | matchStatement
+    | ifStatement
+    | whileStatement;
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
@@ -217,6 +231,9 @@ print: PRINT expression (',' expression)* ';';
 voidMethodCall: declAssignLhs callParameters ';';
 
 sequence: statement*;
+
+matchStatement: MATCH expression '{' caseStatement+ '}';
+caseStatement: CASE expression '=>' sequence;
 
 ifStatement: IF '(' expression ')' '{' sequence '}' (ELSE '{' sequence '}')?;
 
