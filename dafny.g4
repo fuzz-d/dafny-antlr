@@ -155,9 +155,9 @@ expression: modulus
     | sequenceDisplay
     | mapConstructor
     | identifier
-    | expression '[' indexElem ']'
-    | expression DOT '(' datatypeFieldUpdate+ ')'
+    | expression DOT '(' datatypeFieldUpdate (',' datatypeFieldUpdate)* ')'
     | expression DOT expression
+    | expression '[' indexElem ']'
     | '(' expression ')'
     | expression index
     | unaryOperator expression
