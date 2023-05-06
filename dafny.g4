@@ -153,6 +153,7 @@ expression: modulus
     | literal
     | setDisplay
     | sequenceDisplay
+    | sequenceComprehension
     | mapConstructor
     | identifier
     | expression DOT '(' datatypeFieldUpdate (',' datatypeFieldUpdate)* ')'
@@ -198,6 +199,8 @@ index: '[' expression (',' expression)* ']';
 setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
 
 sequenceDisplay: '[' (expression (',' expression)*)? ']';
+
+sequenceComprehension: SEQUENCE '(' expression ',' identifier '=>' expression ')';
 
 mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
 
