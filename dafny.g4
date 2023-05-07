@@ -152,6 +152,7 @@ expression: modulus
     | arrayLength
     | literal
     | setDisplay
+    | setComprehension
     | sequenceDisplay
     | sequenceComprehension
     | mapConstructor
@@ -198,6 +199,8 @@ arrayLength: declAssignLhs '.' LENGTH;
 index: '[' expression (',' expression)* ']';
 
 setDisplay: (MULTISET)? '{' (expression (',' expression)*)? '}';
+
+setComprehension: SET identifierType '|' expression '::' expression;
 
 sequenceDisplay: '[' (expression (',' expression)*)? ']';
 
