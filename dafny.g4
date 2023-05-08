@@ -34,6 +34,9 @@ THEN: 'then';
 BREAK: 'break';
 CONTINUE: 'continue';
 WHILE: 'while';
+FORALL: 'forall';
+FOR: 'for';
+TO: 'to';
 PRINT: 'print';
 MATCH: 'match';
 CASE: 'case';
@@ -220,6 +223,8 @@ statement: breakStatement
     | print
     | matchStatement
     | ifStatement
+    | forallStatement
+    | forLoop
     | whileStatement;
 
 breakStatement: BREAK ';';
@@ -245,6 +250,10 @@ matchStatement: MATCH expression '{' caseStatement+ '}';
 caseStatement: CASE expression '=>' sequence;
 
 ifStatement: IF '(' expression ')' '{' sequence '}' (ELSE '{' sequence '}')?;
+
+forallStatement: FORALL identifier '|' expression LEQ identifier LT expression '{' assignment '}';
+
+forLoop: FOR identifier ':=' expression TO expression '{' sequence '}';
 
 whileStatement: WHILE '(' expression ')' '{' sequence '}';
 
