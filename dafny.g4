@@ -248,7 +248,11 @@ ifStatement: IF '(' expression ')' '{' sequence '}' (ELSE '{' sequence '}')?;
 
 whileStatement: WHILE '(' expression ')' '{' sequence '}';
 
-arrayConstructor: NEW type ('[' intLiteral (',' intLiteral)* ']')+;
+arrayConstructor: NEW type '[' intLiteral ']' (arrayComprehension | arrayValues)?;
+
+arrayComprehension: '(' identifier '=>' expression ')';
+
+arrayValues: '[' expression (',' expression)* ']';
 
 topDeclMember: functionDecl | methodDecl;
 
