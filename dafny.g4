@@ -135,9 +135,9 @@ traitDecl: TRAIT upperIdentifier (EXTENDS upperIdentifier (',' upperIdentifier)*
 
 traitMemberDecl: fieldDecl | functionSignatureDecl | methodSignatureDecl;
 
-functionSignatureDecl: FUNCTION (METHOD)? (identifier | upperIdentifier) parameters ':' type;
+functionSignatureDecl: FUNCTION (METHOD)? (identifier | upperIdentifier) parameters ':' type verifierAnnotation*;
 
-methodSignatureDecl: METHOD (identifier | upperIdentifier) parameters (RETURNS parameters)?;
+methodSignatureDecl: METHOD (identifier | upperIdentifier) parameters (RETURNS parameters)? verifierAnnotation*;
 
 fieldDecl: VAR identifierType;
 
