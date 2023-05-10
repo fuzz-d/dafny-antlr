@@ -41,6 +41,14 @@ PRINT: 'print';
 MATCH: 'match';
 CASE: 'case';
 
+// VERIFICATION
+ASSERT: 'assert';
+DECREASES: 'decreases';
+ENSURES: 'ensures';
+REQUIRES: 'requires';
+READS: 'reads';
+MODIFIES: 'modifies';
+
 // OTHER KEYWORDS
 VAR: 'var';
 NEW: 'new';
@@ -255,7 +263,23 @@ forallStatement: FORALL identifier '|' expression LEQ identifier LT expression '
 
 forLoop: FOR identifier ':=' expression TO expression '{' sequence '}';
 
-whileStatement: WHILE '(' expression ')' '{' sequence '}';
+whileStatement: WHILE '(' expression ')' (verifierAnnotation)* '{' sequence '}';
+
+verifierAnnotation: decreases
+    | ensures
+    | modifies
+    | reads
+    | requires;
+
+decreases: DECREASES expression;
+
+ensures: ENSURES expression;
+
+modifies: MODIFIES identifier;
+
+reads: READS identifier;
+
+requires: REQUIRES expression;
 
 arrayConstructor: NEW type '[' intLiteral ']' (arrayComprehension | arrayValues)?;
 
