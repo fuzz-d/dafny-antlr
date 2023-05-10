@@ -215,7 +215,7 @@ setComprehension: SET identifierType '|' expression '::' expression;
 
 sequenceDisplay: '[' (expression (',' expression)*)? ']';
 
-sequenceComprehension: SEQUENCE '(' expression ',' identifier '=>' expression ')';
+sequenceComprehension: SEQUENCE '(' expression ',' identifier verifierAnnotation* '=>' expression ')';
 
 mapConstructor: MAP '[' (indexElem (',' indexElem)*)? ']';
 
