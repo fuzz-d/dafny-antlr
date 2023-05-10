@@ -223,7 +223,8 @@ mapComprehension: MAP identifierType '|' expression '::' expression ':=' express
 
 indexElem: expression ':=' expression;
 
-statement: breakStatement
+statement: assertStatement
+    | breakStatement
     | continueStatement
     | voidMethodCall
     | declaration
@@ -234,6 +235,8 @@ statement: breakStatement
     | forallStatement
     | forLoop
     | whileStatement;
+
+assertStatement: ASSERT expression;
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
