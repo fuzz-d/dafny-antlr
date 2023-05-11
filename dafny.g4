@@ -48,6 +48,7 @@ ENSURES: 'ensures';
 REQUIRES: 'requires';
 READS: 'reads';
 MODIFIES: 'modifies';
+INVARIANT: 'invariant';
 
 // OTHER KEYWORDS
 VAR: 'var';
@@ -270,6 +271,7 @@ whileStatement: WHILE '(' expression ')' (verifierAnnotation)* '{' sequence '}';
 
 verifierAnnotation: decreases
     | ensures
+    | invariant
     | modifies
     | reads
     | requires;
@@ -277,6 +279,8 @@ verifierAnnotation: decreases
 decreases: DECREASES expression;
 
 ensures: ENSURES expression;
+
+invariant: INVARIANT expression;
 
 modifies: MODIFIES identifier;
 
