@@ -251,7 +251,7 @@ declarationLhs: VAR declAssignLhs (',' declAssignLhs)*;
 declaration: declarationLhs (':' type)? ':=' declAssignRhs ';';
 
 assignmentLhs: declAssignLhs;
-assignment: assignmentLhs ':=' declAssignRhs ';';
+assignment: assignmentLhs (',' assignmentLhs)* ':=' declAssignRhs (',' declAssignRhs)* ';';
 
 print: PRINT expression (',' expression)* ';';
 
