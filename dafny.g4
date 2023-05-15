@@ -52,6 +52,7 @@ INVARIANT: 'invariant';
 
 // OTHER KEYWORDS
 VAR: 'var';
+CONST: 'const';
 NEW: 'new';
 
 // OPERATORS
@@ -140,7 +141,7 @@ functionSignatureDecl: FUNCTION (METHOD)? (identifier | upperIdentifier) paramet
 
 methodSignatureDecl: METHOD (identifier | upperIdentifier) parameters (RETURNS parameters)? verifierAnnotation*;
 
-fieldDecl: VAR identifierType;
+fieldDecl: (VAR | CONST) identifierType;
 
 identifierType: identifier ':' type;
 
