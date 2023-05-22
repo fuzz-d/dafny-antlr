@@ -238,7 +238,7 @@ statement: assertStatement
     | forLoop
     | whileStatement;
 
-assertStatement: ASSERT expression;
+assertStatement: ASSERT expression ';';
 
 breakStatement: BREAK ';';
 continueStatement: CONTINUE ';';
